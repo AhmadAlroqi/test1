@@ -16,24 +16,28 @@ void decodeInstruction(Instruction *inst) {
 
 void executeInstruction(Instruction *inst, int *RA, int *RB, int *RO, int *pc, int *carry) {
     int immediate = (inst->imm << 1) | inst->imm1;
+    int sum = 0;
 
     if (inst->J == 1) {
         *pc = immediate; // Unconditional jump
-    } else if (inst->C == 1 && *carry == 1) {
+    } else if (inst->C == 1 & *carry) {
         *pc = immediate; // Conditional jump on carry
-    } else {
+    }
         if (inst->D1 == 0 && inst->D0 == 0) {
-            if (inst->Sreg == 1) *RA = immediate; // RA = imm
+            if (inst->Sreg == 1) 
+                *RA = immediate; // RA = imm
+            else {
+                *RA = ALU(*RA, *RB, inst->S, RB, carry);
+            } 
         } else if (inst->D1 == 0 && inst->D0 == 1) {
-            if (inst->Sreg == 1) *RB = immediate; // RB = imm
-            else ALU(*RA, *RB, inst->S, RB, carry); // RB = RA (+/-) RB
+            if (inst->Sreg == 1) 
+            *RB = immediate; // RB = imm
+            else *RB = ALU(*RA, *RB, inst->S, RB, carry); // RB = RA (+/-) RB
         } else if (inst->D1 == 1 && inst->D0 == 0) {
             *RO = *RA; // RO = RA
             printf("RO = %d\n", *RO);
-        } else if (inst->D1 == 1 && inst->D0 == 1) {
-            printf("No operation\n");
-        }
-    }
+        } 
+    
     void print_instruction(char *buffer[], int pc_counter) {
     if (buffer[pc_counter] != NULL) {
         printf("Instruction %d: %s\n", pc_counter + 1, buffer[pc_counter]);

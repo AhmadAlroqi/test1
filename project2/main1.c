@@ -9,7 +9,7 @@
 
 void printInstruction(char *buffer[], int pc) {
     if (buffer[pc] != NULL) {
-        printf("Instruction %d: %s\n", pc + 1, buffer[pc]);
+        //printf("Instruction %d: %s\n", pc + 1, buffer[pc]);
     } else {
         printf("No instruction at PC=%d\n", pc);
     }
@@ -41,7 +41,7 @@ int main() {
         executeInstruction(&inst, &RA, &RB, &RO, &pc, &carry);
 
         pc++; 
-        sleep(1); 
+        usleep(200000); 
     }
 
     for (int j = 0; j < count; j++) {
